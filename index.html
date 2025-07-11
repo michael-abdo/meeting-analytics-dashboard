@@ -927,8 +927,8 @@
                         </div>
                         <p class="intervention-text">"Sarah, your insights are valuable. What potential challenges should we consider to strengthen our approach?"</p>
                         <div class="intervention-actions">
-                            <button class="btn btn-primary">Execute</button>
-                            <button class="btn btn-secondary">Alternative</button>
+                            <button class="btn btn-primary" onclick="executeIntervention()">Execute</button>
+                            <button class="btn btn-secondary" onclick="showAlternative()">Alternative</button>
                         </div>
                     </div>
                     
@@ -980,10 +980,10 @@
         </main>
         
         <footer class="action-bar">
-            <button class="action-btn">📊 View Analytics</button>
-            <button class="action-btn">⏸️ Suggest Break</button>
-            <button class="action-btn secondary">📄 Export Report</button>
-            <button class="action-btn secondary">⚙️ Preferences</button>
+            <button class="action-btn" onclick="viewAnalytics()">📊 View Analytics</button>
+            <button class="action-btn" onclick="suggestBreak()">⏸️ Suggest Break</button>
+            <button class="action-btn secondary" onclick="exportReport()">📄 Export Report</button>
+            <button class="action-btn secondary" onclick="openPreferences()">⚙️ Preferences</button>
         </footer>
     </div>
     
@@ -1006,5 +1006,162 @@
             <span class="hud-value">40%</span>
         </div>
     </div>
+
+    <script>
+        // Bottom navigation functions
+        function viewAnalytics() {
+            // Scroll to analytics section smoothly
+            const analyticsSection = document.querySelector('.power-grid');
+            if (analyticsSection) {
+                analyticsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast('📊 Scrolled to Analytics Section');
+            }
+        }
+
+        function suggestBreak() {
+            // Show break suggestion modal
+            const modal = createModal(
+                '⏸️ Break Suggestion',
+                'Team has been in session for 2:45:12. Consider a 5-10 minute break to maintain engagement and focus.',
+                [
+                    { text: 'Suggest Now', action: () => { showToast('✅ Break suggestion sent to team'); closeModal(); } },
+                    { text: 'Schedule for Later', action: () => { showToast('📅 Break scheduled for 5 minutes'); closeModal(); } },
+                    { text: 'Cancel', action: closeModal }
+                ]
+            );
+            document.body.appendChild(modal);
+        }
+
+        function exportReport() {
+            // Trigger report download
+            showToast('📄 Generating report...');
+            setTimeout(() => {
+                window.location.href = '/api/export';
+                showToast('✅ Report downloaded successfully');
+            }, 1000);
+        }
+
+        function openPreferences() {
+            // Show preferences modal
+            const modal = createModal(
+                '⚙️ Dashboard Preferences',
+                'Configure your dashboard settings:',
+                [
+                    { text: 'Auto-refresh: ON', action: () => showToast('🔄 Auto-refresh toggled') },
+                    { text: 'Notifications: ON', action: () => showToast('🔔 Notifications toggled') },
+                    { text: 'Dark Mode: OFF', action: () => showToast('🌙 Theme toggled') },
+                    { text: 'Close', action: closeModal }
+                ]
+            );
+            document.body.appendChild(modal);
+        }
+
+        // Intervention functions
+        function executeIntervention() {
+            showToast('✅ Intervention message sent to Sarah');
+            const button = event.target;
+            button.style.background = '#059669';
+            button.textContent = 'Sent ✓';
+            setTimeout(() => {
+                button.style.background = '#3b82f6';
+                button.textContent = 'Execute';
+            }, 2000);
+        }
+
+        function showAlternative() {
+            const alternatives = [
+                '"Tom, we\'d love to hear your perspective on this."',
+                '"Let\'s take a moment for everyone to share their thoughts."',
+                '"Sarah, great points. How do others feel about this approach?"'
+            ];
+            const randomAlt = alternatives[Math.floor(Math.random() * alternatives.length)];
+            
+            const modal = createModal(
+                '💬 Alternative Suggestions',
+                `<p>Try this approach instead:</p><p style="font-style: italic; color: #3b82f6;">"${randomAlt}"</p>`,
+                [
+                    { text: 'Use This', action: () => { showToast('✅ Alternative suggestion sent'); closeModal(); } },
+                    { text: 'Show Another', action: () => { closeModal(); setTimeout(showAlternative, 100); } },
+                    { text: 'Cancel', action: closeModal }
+                ]
+            );
+            document.body.appendChild(modal);
+        }
+
+        // Utility functions
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 1000;
+                background: #3b82f6; color: white; padding: 12px 20px;
+                border-radius: 4px; font-size: 14px; font-weight: 500;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transform: translateX(100%); transition: transform 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 100);
+            setTimeout(() => { 
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        function createModal(title, content, buttons) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.5); z-index: 2000;
+                display: flex; align-items: center; justify-content: center;
+            `;
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: #ffffff; border-radius: 8px; padding: 24px;
+                max-width: 500px; width: 90%; border: 1px solid #e5e7eb;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            `;
+            
+            modal.innerHTML = `
+                <h3 style="margin: 0 0 16px 0; color: #374151; font-size: 18px;">${title}</h3>
+                <div style="margin-bottom: 20px; color: #6b7280; line-height: 1.5;">${content}</div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    ${buttons.map(btn => `
+                        <button onclick="(${btn.action.toString()})()" style="
+                            background: #3b82f6; color: white; border: none; padding: 8px 16px;
+                            border-radius: 4px; cursor: pointer; font-size: 14px;
+                        ">${btn.text}</button>
+                    `).join('')}
+                </div>
+            `;
+            
+            overlay.appendChild(modal);
+            overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+            return overlay;
+        }
+
+        function closeModal() {
+            const modals = document.querySelectorAll('div[style*="position: fixed"][style*="z-index: 2000"]');
+            modals.forEach(modal => document.body.removeChild(modal));
+        }
+
+        // Add keyboard navigation improvements
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Fix accessibility for disabled elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove any actually disabled buttons from tab order (if needed)
+            const disabledButtons = document.querySelectorAll('button[disabled]');
+            disabledButtons.forEach(btn => {
+                btn.setAttribute('tabindex', '-1');
+                btn.setAttribute('aria-disabled', 'true');
+            });
+        });
+    </script>
 </body>
 </html>

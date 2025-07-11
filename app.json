@@ -1,0 +1,22 @@
+{
+  "name": "Meeting Analytics Dashboard",
+  "description": "Professional meeting analytics dashboard with behavioral insights",
+  "repository": "https://github.com/your-username/meeting-analytics-dashboard",
+  "logo": "https://cdn.jsdelivr.net/npm/heroicons@1.0.6/outline/chart-bar.svg",
+  "keywords": ["analytics", "dashboard", "meeting", "behavioral", "insights"],
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment",
+      "value": "production"
+    }
+  },
+  "scripts": {
+    "postdeploy": "echo 'Dashboard deployed successfully!'"
+  }
+}
