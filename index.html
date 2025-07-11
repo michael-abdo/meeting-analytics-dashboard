@@ -114,7 +114,7 @@
             gap: 20px;
             padding: 20px;
             background: #ffffff;
-            overflow-y: auto;
+            overflow: hidden;
             min-height: 0;
         }
         
@@ -124,7 +124,7 @@
             gap: 20px;
             min-height: 0;
             max-height: calc(100vh - 200px);
-            overflow-y: auto;
+            overflow: hidden;
         }
         
         .player-card {
@@ -260,8 +260,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
-            max-height: 400px;
-            overflow-y: auto;
+            overflow: hidden;
         }
         
         .power-card {
@@ -529,8 +528,7 @@
         }
         
         .transcript-feed {
-            max-height: 200px;
-            overflow-y: auto;
+            overflow: hidden;
         }
         
         .transcript-item {
@@ -880,26 +878,6 @@
                         <div class="power-label">Vocal Pitch</div>
                         <div class="power-value warning">+23Hz</div>
                     </div>
-                    <div class="power-card">
-                        <div class="power-icon">😑</div>
-                        <div class="power-label">Microexpressions</div>
-                        <div class="power-value warning">3 Frustration</div>
-                    </div>
-                    <div class="power-card">
-                        <div class="power-icon">🔍</div>
-                        <div class="power-label">Gaze Direction</div>
-                        <div class="power-value attention">78% Away</div>
-                    </div>
-                    <div class="power-card">
-                        <div class="power-icon">📝</div>
-                        <div class="power-label">Text Analysis</div>
-                        <div class="power-value warning">12 Absolutes</div>
-                    </div>
-                    <div class="power-card">
-                        <div class="power-icon">⚡</div>
-                        <div class="power-label">Interventions</div>
-                        <div class="power-value">2/5 Success</div>
-                    </div>
                 </div>
                 
                 <div class="speaking-chart">
@@ -968,15 +946,6 @@
                             <button class="btn btn-secondary" onclick="showAlternative()" aria-label="Show alternative intervention suggestions">Alternative</button>
                         </div>
                     </div>
-                    
-                    <div class="intervention-item">
-                        <div class="intervention-header">
-                            <span class="intervention-icon">🔔</span>
-                            <span class="intervention-title">Gentle Reminder</span>
-                            <span class="status-active">Live</span>
-                        </div>
-                        <p class="intervention-text">"Consider inviting others to share their thoughts" - suggested to Sarah</p>
-                    </div>
                 </div>
                 
                 <div class="transcript-panel">
@@ -993,24 +962,6 @@
                             </div>
                         </div>
                         
-                        <div class="transcript-item interrupted">
-                            <div class="transcript-time">10:23:52</div>
-                            <div class="transcript-content">
-                                <strong>Tom:</strong> "Actually, I think we should consider the budget implications..."
-                                <div class="interruption-note">Interrupted by Sarah at 0:03</div>
-                            </div>
-                        </div>
-                        
-                        <div class="transcript-item warning">
-                            <div class="transcript-time">10:23:55</div>
-                            <div class="transcript-content">
-                                <strong>Sarah:</strong> "We don't have time for that"
-                                <div class="bias-flags">
-                                    <span class="flag">Redirect pattern</span>
-                                    <span class="flag">Time pressure</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
