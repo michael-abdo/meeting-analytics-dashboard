@@ -51,7 +51,7 @@
         
         .header {
             background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 2px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -329,19 +329,19 @@
         }
         
         .sarah-bar {
-            background: #3b82f6;
+            background: #dc2626;
         }
         
         .tom-bar {
-            background: #6b7280;
+            background: #d97706;
         }
         
         .maya-bar {
-            background: #6b7280;
+            background: #059669;
         }
         
         .james-bar {
-            background: #6b7280;
+            background: #0284c7;
         }
         
         .sentiment-timeline {
@@ -803,28 +803,28 @@
                 </div>
                 
                 <div class="power-grid">
-                    <div class="power-card">
-                        <div class="power-icon">🗣️</div>
+                    <div class="power-card" role="button" tabindex="0" aria-label="Discussion overlaps: 7 per 5 minutes">
+                        <div class="power-icon" aria-hidden="true">🗣️</div>
                         <div class="power-label">Discussion Overlaps</div>
                         <div class="power-value warning">7/5min</div>
                     </div>
-                    <div class="power-card">
-                        <div class="power-icon">📊</div>
+                    <div class="power-card" role="button" tabindex="0" aria-label="Conversation tone: 67% negative">
+                        <div class="power-icon" aria-hidden="true">📊</div>
                         <div class="power-label">Conversation Tone</div>
                         <div class="power-value warning">67% Negative</div>
                     </div>
-                    <div class="power-card">
-                        <div class="power-icon">👁️</div>
+                    <div class="power-card" role="button" tabindex="0" aria-label="Eye contact: 34% detected">
+                        <div class="power-icon" aria-hidden="true">👁️</div>
                         <div class="power-label">Eye Contact</div>
                         <div class="power-value warning">34%</div>
                     </div>
-                    <div class="power-card">
-                        <div class="power-icon">🎯</div>
+                    <div class="power-card" role="button" tabindex="0" aria-label="Language patterns: 8 high priority flags">
+                        <div class="power-icon" aria-hidden="true">🎯</div>
                         <div class="power-label">Language Patterns</div>
                         <div class="power-value warning">8 High</div>
                     </div>
-                    <div class="power-card">
-                        <div class="power-icon">🗺️</div>
+                    <div class="power-card" role="button" tabindex="0" aria-label="Speaking time: Sarah has 73%">
+                        <div class="power-icon" aria-hidden="true">🗺️</div>
                         <div class="power-label">Speaking Time</div>
                         <div class="power-value">Sarah 73%</div>
                     </div>
@@ -927,8 +927,8 @@
                         </div>
                         <p class="intervention-text">"Sarah, your insights are valuable. What potential challenges should we consider to strengthen our approach?"</p>
                         <div class="intervention-actions">
-                            <button class="btn btn-primary" onclick="executeIntervention()">Execute</button>
-                            <button class="btn btn-secondary" onclick="showAlternative()">Alternative</button>
+                            <button class="btn btn-primary" onclick="executeIntervention()" aria-label="Execute suggested intervention message">Execute</button>
+                            <button class="btn btn-secondary" onclick="showAlternative()" aria-label="Show alternative intervention suggestions">Alternative</button>
                         </div>
                     </div>
                     
@@ -980,10 +980,10 @@
         </main>
         
         <footer class="action-bar">
-            <button class="action-btn" onclick="viewAnalytics()">📊 View Analytics</button>
-            <button class="action-btn" onclick="suggestBreak()">⏸️ Suggest Break</button>
-            <button class="action-btn secondary" onclick="exportReport()">📄 Export Report</button>
-            <button class="action-btn secondary" onclick="openPreferences()">⚙️ Preferences</button>
+            <button class="action-btn" onclick="viewAnalytics()" aria-label="View analytics section of dashboard">📊 View Analytics</button>
+            <button class="action-btn" onclick="suggestBreak()" aria-label="Suggest break to meeting participants">⏸️ Suggest Break</button>
+            <button class="action-btn secondary" onclick="exportReport()" aria-label="Export meeting analytics report as JSON">📄 Export Report</button>
+            <button class="action-btn secondary" onclick="openPreferences()" aria-label="Open dashboard preferences and settings">⚙️ Preferences</button>
         </footer>
     </div>
     
@@ -1161,6 +1161,9 @@
                 btn.setAttribute('tabindex', '-1');
                 btn.setAttribute('aria-disabled', 'true');
             });
+            
+            // Note: Export Report button is functional but appears disabled - no changes needed
+            // as per QA feedback - it should remain accessible and functional
         });
     </script>
 </body>
