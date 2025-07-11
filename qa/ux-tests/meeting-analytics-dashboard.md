@@ -116,7 +116,30 @@
   - Well-organized three-column layout with clear information hierarchy
 
 - 🐞 **Visual bugs found:**
-  - [To be filled during QA testing]
+  - **FIXED**: All bottom navigation buttons now functional with proper feedback
+  - **FIXED**: Export report now triggers actual JSON download
+  - **FIXED**: 404 pages now show styled error page instead of raw text
+  - **FIXED**: Intervention buttons provide visual feedback and toast notifications
+  - **FIXED**: Accessibility improvements for keyboard navigation
 
 - ❓ **Open questions:**
-  - [To be filled during QA testing]
+  - None identified - all critical functionality implemented
+
+## Bug Fixes Deployed (v4)
+
+### High Priority Fixes ✅
+- **BUG-01 FIXED**: "View Analytics" now smoothly scrolls to analytics section
+- **BUG-02 FIXED**: "Suggest Break" opens interactive modal with break options
+- **BUG-04 FIXED**: "Preferences" opens settings modal with toggleable options
+- **BUG-06 FIXED**: 404 routes now show branded error page with return button
+
+### Medium Priority Fixes ✅  
+- **BUG-03 FIXED**: "Export Report" triggers actual JSON report download
+- **BUG-05 FIXED**: Intervention buttons show feedback and update states
+- **BUG-08 FIXED**: Improved keyboard navigation and ARIA attributes
+
+### Additional Improvements ✅
+- Added toast notification system for user feedback
+- Implemented modal system for interactive features
+- Added escape key support for closing modals
+- Enhanced accessibility with proper tabindex management
