@@ -125,7 +125,7 @@
 - ❓ **Open questions:**
   - None identified - all critical functionality implemented
 
-## Bug Fixes Deployed (v4)
+## Bug Fixes Deployed (v5)
 
 ### High Priority Fixes ✅
 - **BUG-01 FIXED**: "View Analytics" now smoothly scrolls to analytics section
@@ -138,8 +138,16 @@
 - **BUG-05 FIXED**: Intervention buttons show feedback and update states
 - **BUG-08 FIXED**: Improved keyboard navigation and ARIA attributes
 
+### Visual QA Fixes (v5) ✅
+- **HEADER BORDER FIXED**: Increased header border from 1px to 2px for visibility
+- **BAR CHART COLORS FIXED**: Restored specification colors (Sarah=red, Tom=orange, Maya=green, James=blue)
+- **ACCESSIBILITY ENHANCED**: Added comprehensive ARIA labels for all interactive elements
+- **POWER CARDS IMPROVED**: Added role="button", tabindex, and descriptive aria-labels
+- **KEYBOARD NAVIGATION**: All buttons now have proper accessibility attributes
+
 ### Additional Improvements ✅
 - Added toast notification system for user feedback
 - Implemented modal system for interactive features
 - Added escape key support for closing modals
 - Enhanced accessibility with proper tabindex management
+- Icon-only elements now have aria-hidden="true" with descriptive labels on parent elements
