@@ -1,0 +1,24 @@
+{
+  "name": "meeting-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Professional meeting analytics dashboard with behavioral insights",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": [
+    "dashboard",
+    "analytics",
+    "meeting",
+    "behavioral"
+  ],
+  "author": "Meeting Analytics Team",
+  "license": "MIT"
+}
