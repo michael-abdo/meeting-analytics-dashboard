@@ -40,6 +40,24 @@
             z-index: 1;
         }
         
+        /* Consistent scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
         .container {
             width: 100vw;
             height: 100vh;
@@ -51,7 +69,7 @@
         
         .header {
             background: #ffffff;
-            border-bottom: 4px solid #9ca3af;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -74,6 +92,7 @@
         
         .score-item {
             text-align: center;
+            min-width: 80px;
         }
         
         .score-label {
@@ -461,6 +480,7 @@
             border-radius: 4px;
             font-size: 11px;
             font-weight: 600;
+            margin-right: 6px;
         }
         
         .status-active {
@@ -605,15 +625,15 @@
         }
         
         .action-btn.secondary {
-            background: transparent;
-            color: #6b7280;
-            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #d1d5db;
         }
         
         .action-btn.secondary:hover {
-            background: #f3f4f6;
-            color: #374151;
-            border-color: #d1d5db;
+            background: #e2e8f0;
+            color: #1f2937;
+            border-color: #9ca3af;
         }
         
         .action-btn.secondary:focus {
@@ -838,7 +858,7 @@
                     <div class="power-card" role="button" tabindex="0" aria-label="Language patterns: 8 high priority flags">
                         <div class="power-icon" aria-hidden="true">🎯</div>
                         <div class="power-label">Language Patterns</div>
-                        <div class="power-value warning">8 High</div>
+                        <div class="power-value warning">8<br><span style="font-size: 14px;">High</span></div>
                     </div>
                     <div class="power-card" role="button" tabindex="0" aria-label="Speaking time: Sarah has 73%">
                         <div class="power-icon" aria-hidden="true">🗺️</div>
@@ -976,8 +996,8 @@
                         <div class="transcript-item interrupted">
                             <div class="transcript-time">10:23:52</div>
                             <div class="transcript-content">
-                                <strong>Tom:</strong> "Actually, I think we should consid—"
-                                <div class="interruption-note">Speaking overlap at 0:03</div>
+                                <strong>Tom:</strong> "Actually, I think we should consider the budget implications..."
+                                <div class="interruption-note">Interrupted by Sarah at 0:03</div>
                             </div>
                         </div>
                         
