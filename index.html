@@ -4,740 +4,172 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting Analytics Dashboard</title>
+    <!-- Modular CSS Architecture -->
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        /* Critical inline styles for initial render - rest in external CSS */
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f8fafc;
-            color: #374151;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
+        /* Skip to main content link for accessibility */
+        .skip-nav {
+            position: absolute;
+            top: -40px;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(107, 114, 128, 0.01) 2px,
-                    rgba(107, 114, 128, 0.01) 4px
-                );
-            pointer-events: none;
-            z-index: 1;
+            background: var(--color-primary, #3b82f6);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            z-index: 2001;
         }
         
-        /* Consistent scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 6px;
+        .skip-nav:focus {
+            top: 0;
         }
         
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-        
-        .container {
-            width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-rows: 80px 1fr 100px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .header {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-        }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #374151;
-            letter-spacing: 1px;
-        }
-        
-        .score-display {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-        
-        .score-item {
-            text-align: center;
-            min-width: 80px;
-        }
-        
-        .score-label {
-            font-size: 10px;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .score-value {
-            font-size: 24px;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .main-area {
-            display: grid;
-            grid-template-columns: 300px 1fr 300px;
-            gap: 20px;
-            padding: 20px;
-            background: #ffffff;
-            overflow: hidden;
-            min-height: 0;
-        }
-        
-        .side-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            min-height: 0;
-            max-height: calc(100vh - 200px);
+        /* Screen reader announcer */
+        .sr-announcer {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
             overflow: hidden;
         }
         
-        .player-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        
-        
-        
-        .player-header {
+        /* Alert system styles */
+        .alert {
+            padding: var(--spacing-md);
+            margin: var(--spacing-sm) 0;
+            border-radius: var(--radius-base);
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: var(--spacing-sm);
+            animation: slideIn 0.3s ease-out;
         }
         
-        .player-avatar {
-            width: 60px;
-            height: 60px;
-            background: #6b7280;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--color-warning);
+            color: var(--color-warning);
+        }
+        
+        .alert-critical {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid var(--color-critical);
+            color: var(--color-critical);
+        }
+        
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
             font-size: 20px;
-            color: #ffffff;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
         
-        .player-info {
-            flex: 1;
+        .alert-close:hover {
+            opacity: 1;
         }
         
-        .player-name {
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        
-        .player-status {
-            font-size: 12px;
-            color: #6b7280;
-        }
-        
-        .player-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
-        .stat-box {
-            background: #f9fafb;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .stat-label {
-            font-size: 10px;
-            color: #6b7280;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        
-        .stat-value {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .center-display {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .insight-zone {
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 24px;
-            text-align: center;
+        /* Loading states */
+        .loading {
             position: relative;
-            overflow: hidden;
+            color: transparent !important;
         }
         
-        
-        .insight-title {
-            font-size: 20px;
-            font-weight: 500;
-            text-transform: none;
-            color: #374151;
-            margin-bottom: 10px;
-        }
-        
-        
-        .fatigue-meter {
-            width: 100%;
-            height: 32px;
-            background: #f3f4f6;
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-            margin: 16px 0;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .fatigue-fill {
-            height: 100%;
-            width: 73%;
-            background: #3b82f6;
-            position: relative;
-        }
-        
-        
-        .fatigue-value {
+        .loading::after {
+            content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 20px;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
         
-        .power-grid {
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Modal animations */
+        .modal-overlay.closing {
+            animation: fadeOut 0.2s ease-out forwards;
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+        
+        /* Metric detail grid */
+        .metric-detail-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            overflow: hidden;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
         }
         
-        .power-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .power-card:hover {
-            border-color: #e5e7eb;
-        }
-        
-        .power-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-        
-        .power-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            color: #6b7280;
-            line-height: 1.2;
-        }
-        
-        .power-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .speaking-chart {
-            margin-top: 20px;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 20px;
-        }
-        
-        .chart-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #374151;
-            text-align: center;
-        }
-        
-        .chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .bar-label {
-            width: 60px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #6b7280;
-        }
-        
-        .bar-fill {
-            height: 24px;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            color: white;
-            background: #6b7280;
-        }
-        
-        .sarah-bar {
-            background: #dc2626 !important;
-        }
-        
-        .tom-bar {
-            background: #d97706 !important;
-        }
-        
-        .maya-bar {
-            background: #059669 !important;
-        }
-        
-        .james-bar {
-            background: #0284c7 !important;
-        }
-        
-        .sentiment-timeline {
-            margin-top: 20px;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 20px;
-        }
-        
-        .timeline-container {
-            display: grid;
-            grid-template-columns: 30px 1fr;
-            grid-template-rows: 1fr auto;
-            gap: 10px;
-            height: 120px;
-        }
-        
-        .timeline-axis {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding-right: 10px;
-        }
-        
-        .axis-label {
-            font-size: 10px;
-            color: #6b7280;
-        }
-        
-        .timeline-chart {
-            position: relative;
-            background: #f8fafc;
-            border-radius: 2px;
-        }
-        
-        .timeline-svg {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .sentiment-path {
-            fill: none;
-            stroke: #6b7280;
-            stroke-width: 2;
-        }
-        
-        
-        .sentiment-point {
-            fill: #3b82f6;
-            stroke: #ffffff;
-            stroke-width: 1;
-        }
-        
-        .sentiment-point.attention {
-            fill: #3b82f6;
-        }
-        
-        
-        .timeline-labels {
-            grid-column: 2;
+        .metric-detail-item {
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
-            color: #6b7280;
+            padding: var(--spacing-sm);
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-base);
         }
         
-        .intervention-panel, .transcript-panel {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
+        .metric-detail-label {
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
         }
         
-        .panel-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #374151;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .metric-detail-value {
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
         }
         
-        .intervention-item {
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 12px;
-        }
-        
-        .intervention-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .intervention-icon {
-            font-size: 16px;
-        }
-        
-        .intervention-title {
-            flex: 1;
-            font-size: 13px;
-            font-weight: 600;
-            color: #f8fafc;
-        }
-        
-        .success-rate {
-            background: #3b82f6;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-right: 6px;
-        }
-        
-        .status-active {
-            background: #3b82f6;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .intervention-text {
-            font-size: 13px;
-            line-height: 1.4;
-            margin-bottom: 12px;
-            color: #cbd5e1;
-        }
-        
-        .intervention-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .btn {
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: none;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2563eb;
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: #6b7280;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .transcript-feed {
-            overflow: hidden;
-        }
-        
-        .transcript-item {
-            margin-bottom: 12px;
-            padding: 10px;
-            border-radius: 4px;
-            border-left: 3px solid #6b7280;
-        }
-        
-        .transcript-item.attention {
-            background: #f8fafc;
-            border-left-color: #3b82f6;
-        }
-        
-        .transcript-item.warning {
-            background: #f8fafc;
-            border-left-color: #6b7280;
-        }
-        
-        .transcript-item.interrupted {
-            background: #f8fafc;
-            border-left-color: #6b7280;
-        }
-        
-        .transcript-time {
-            font-size: 10px;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-        
-        .transcript-content {
-            font-size: 12px;
-            line-height: 1.4;
-        }
-        
-        .bias-flags {
-            display: flex;
-            gap: 4px;
-            margin-top: 6px;
-        }
-        
-        .flag {
-            background: #f8fafc;
-            color: #6b7280;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 9px;
-            font-weight: 600;
-        }
-        
-        .interruption-note {
-            color: #6b7280;
-            font-size: 10px;
-            font-style: italic;
-            margin-top: 4px;
-        }
-        
-        .warning { color: #6b7280; }
-        .attention { color: #3b82f6; }
-        .elevated { color: #374151; }
-        
-        .action-bar {
-            background: #f8fafc;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            padding: 0 30px;
-        }
-        
-        .action-btn {
-            background: #3b82f6;
-            color: #ffffff;
-            border: none;
-            padding: 12px 24px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-radius: 4px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        
-        
-        .action-btn:hover {
-            background: #2563eb;
-        }
-        
-        .action-btn.secondary {
-            background: #f8fafc;
-            color: #374151;
-            border: 1px solid #d1d5db;
-        }
-        
-        .action-btn.secondary:hover {
-            background: #e2e8f0;
-            color: #1f2937;
-            border-color: #9ca3af;
-        }
-        
-        .action-btn.secondary:focus {
-            outline: 2px solid #3b82f6;
+        /* Enhanced focus states for better accessibility */
+        .enhanced-focus:focus-visible {
+            outline: 3px solid var(--color-primary);
             outline-offset: 2px;
         }
         
-        .action-btn.secondary.export-disabled {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        
-        .floating-hud {
-            position: fixed;
-            top: 100px;
-            right: 30px;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 20px;
-            width: 250px;
-        }
-        
-        .hud-title {
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #374151;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .hud-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px;
-            background: #f9fafb;
-            border-radius: 4px;
-        }
-        
-        .hud-label {
-            font-size: 11px;
-            color: #6b7280;
-        }
-        
-        .hud-value {
-            font-size: 12px;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .main-area {
-                grid-template-columns: 250px 1fr 250px;
+        /* Data freshness animation */
+        @keyframes pulse-dot {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
             }
-            
-            .floating-hud {
-                width: 200px;
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
             }
         }
         
-        @media (max-width: 1024px) {
-            .main-area {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto;
-            }
-            
-            .power-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .floating-hud {
-                position: relative;
-                top: auto;
-                right: auto;
-                width: 100%;
-                margin-top: 20px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .power-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .score-display {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .power-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .container {
-                grid-template-rows: auto 1fr auto;
-            }
+        .data-fresh::after {
+            animation: pulse-dot 2s infinite;
         }
     </style>
 </head>
@@ -748,7 +180,7 @@
             <div class="score-display">
                 <div class="score-item">
                     <div class="score-label">Session Time</div>
-                    <div class="score-value">02:45:12</div>
+                    <div class="score-value" data-metric="session-time">02:45:12</div>
                 </div>
                 <div class="score-item">
                     <div class="score-label">Attention Level</div>
@@ -758,16 +190,16 @@
                     <div class="score-label">Participants</div>
                     <div class="score-value">4 Active</div>
                 </div>
-                <div class="score-item">
+                <div class="score-item priority-high">
                     <div class="score-label">Speaking Balance</div>
-                    <div class="score-value warning">Imbalanced</div>
+                    <div class="score-value warning trend-down">Imbalanced</div>
                 </div>
             </div>
         </header>
         
-        <main class="main-area">
+        <main class="main-area" id="main-content">
             <div class="side-panel">
-                <div class="player-card">
+                <div class="player-card status-attention priority-high">
                     <div class="player-header">
                         <div class="player-avatar">SC</div>
                         <div class="player-info">
@@ -776,17 +208,17 @@
                         </div>
                     </div>
                     <div class="player-stats">
-                        <div class="stat-box">
+                        <div class="stat-box intensity-high">
                             <div class="stat-label">Speaking Time</div>
-                            <div class="stat-value attention">73%</div>
+                            <div class="stat-value attention trend-up" data-stat="speaking-time" data-live-update data-format="percentage">73%</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Engagement</div>
-                            <div class="stat-value">89%</div>
+                            <div class="stat-value" data-stat="engagement" data-live-update data-format="percentage">89%</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Interruptions</div>
-                            <div class="stat-value warning">4</div>
+                            <div class="stat-value warning" data-stat="interruptions">4</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Sentiment</div>
@@ -795,26 +227,26 @@
                     </div>
                 </div>
                 
-                <div class="player-card">
+                <div class="player-card status-warning priority-high">
                     <div class="player-header">
                         <div class="player-avatar">TL</div>
                         <div class="player-info">
                             <div class="player-name">Tom Liu</div>
-                            <div class="player-status warning">📉 Low Engagement</div>
+                            <div class="player-status warning critical-alert">📉 Low Engagement</div>
                         </div>
                     </div>
                     <div class="player-stats">
                         <div class="stat-box">
                             <div class="stat-label">Speaking Time</div>
-                            <div class="stat-value warning">12%</div>
+                            <div class="stat-value warning" data-stat="speaking-time" data-live-update data-format="percentage">12%</div>
                         </div>
-                        <div class="stat-box">
+                        <div class="stat-box intensity-high">
                             <div class="stat-label">Engagement</div>
-                            <div class="stat-value warning">23%</div>
+                            <div class="stat-value warning trend-down" data-stat="engagement" data-live-update data-format="percentage">23%</div>
                         </div>
-                        <div class="stat-box">
+                        <div class="stat-box intensity-high">
                             <div class="stat-label">Eye Contact</div>
-                            <div class="stat-value warning">8%</div>
+                            <div class="stat-value warning trend-down" data-stat="eye-contact" data-live-update data-format="percentage">8%</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Sentiment</div>
@@ -825,9 +257,9 @@
             </div>
             
             <div class="center-display">
-                <div class="insight-zone">
+                <div class="insight-zone critical priority-high intensity-high">
                     <h2 class="insight-title">📊 Speaking Time Analysis</h2>
-                    <p style="margin-bottom: 20px; font-size: 16px; color: #374151;">Sarah: 73% speaking time (Recommended: 25% per participant)</p>
+                    <p style="margin-bottom: 20px; font-size: 16px; color: #374151;">Sarah: <span class="trend-up">73%</span> speaking time (Recommended: 25% per participant)</p>
                     <div class="fatigue-meter">
                         <div class="fatigue-fill"></div>
                         <div class="fatigue-value">Attention Recommended</div>
@@ -838,35 +270,35 @@
                 </div>
                 
                 <div class="power-grid">
-                    <div class="power-card" role="button" tabindex="0" aria-label="Discussion overlaps: 7 per 5 minutes">
+                    <div class="power-card warning priority-high intensity-high" role="button" tabindex="0" aria-label="Discussion overlaps: 7 per 5 minutes" data-metric="interruptions">
                         <div class="power-icon" aria-hidden="true">🗣️</div>
                         <div class="power-label">Discussion Overlaps</div>
                         <div class="power-value warning">7/5min</div>
                     </div>
-                    <div class="power-card" role="button" tabindex="0" aria-label="Conversation tone: 67% negative">
+                    <div class="power-card warning" role="button" tabindex="0" aria-label="Conversation tone: 67% negative" data-metric="sentiment-negative">
                         <div class="power-icon" aria-hidden="true">📊</div>
                         <div class="power-label">Conversation Tone</div>
                         <div class="power-value warning">67% Negative</div>
                     </div>
-                    <div class="power-card" role="button" tabindex="0" aria-label="Eye contact: 34% detected">
+                    <div class="power-card warning" role="button" tabindex="0" aria-label="Eye contact: 34% detected" data-metric="eye-contact">
                         <div class="power-icon" aria-hidden="true">👁️</div>
                         <div class="power-label">Eye Contact</div>
                         <div class="power-value warning">34%</div>
                     </div>
-                    <div class="power-card" role="button" tabindex="0" aria-label="Language patterns: 8 high priority flags">
+                    <div class="power-card warning" role="button" tabindex="0" aria-label="Language patterns: 8 high priority flags" data-metric="language-patterns">
                         <div class="power-icon" aria-hidden="true">🎯</div>
                         <div class="power-label">Language Patterns</div>
                         <div class="power-value warning">8<br><span style="font-size: 14px;">High</span></div>
                     </div>
-                    <div class="power-card" role="button" tabindex="0" aria-label="Speaking time: Sarah has 73%">
+                    <div class="power-card critical" role="button" tabindex="0" aria-label="Speaking time: Sarah has 73%" data-metric="speaking-time-max">
                         <div class="power-icon" aria-hidden="true">🗺️</div>
                         <div class="power-label">Speaking Time</div>
                         <div class="power-value">Sarah 73%</div>
                     </div>
-                    <div class="power-card">
+                    <div class="power-card" role="button" tabindex="0" aria-label="Engagement: 41%" data-metric="engagement">
                         <div class="power-icon">📈</div>
                         <div class="power-label">Engagement</div>
-                        <div class="power-value attention">41%</div>
+                        <div class="power-value attention" data-live-update data-format="percentage">41%</div>
                     </div>
                     <div class="power-card">
                         <div class="power-icon">💬</div>
@@ -979,7 +411,7 @@
         <h3 class="hud-title">Session Analytics</h3>
         <div class="hud-item">
             <span class="hud-label">Team Engagement</span>
-            <span class="hud-value">41%</span>
+            <span class="hud-value" data-live-update data-format="percentage">41%</span>
         </div>
         <div class="hud-item">
             <span class="hud-label">Items Noted</span>
@@ -995,169 +427,26 @@
         </div>
     </div>
 
+    <!-- Modular JavaScript Architecture -->
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/interactions.js"></script>
+    <script src="assets/js/analytics.js"></script>
+    
     <script>
-        // Bottom navigation functions
-        function viewAnalytics() {
-            // Scroll to analytics section smoothly
-            const analyticsSection = document.querySelector('.power-grid');
-            if (analyticsSection) {
-                analyticsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                showToast('📊 Scrolled to Analytics Section');
-            }
+        /* Performance optimization: Set session time immediately to avoid flicker */
+        if (!window.dashboard) {
+            const sessionStart = Date.now();
+            const updateTime = () => {
+                const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+                const hours = Math.floor(elapsed / 3600);
+                const minutes = Math.floor((elapsed % 3600) / 60); 
+                const seconds = elapsed % 60;
+                const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                const element = document.querySelector('[data-metric="session-time"]');
+                if (element) element.textContent = timeString;
+            };
+            setInterval(updateTime, 1000);
         }
-
-        function suggestBreak() {
-            // Show break suggestion modal
-            const modal = createModal(
-                '⏸️ Break Suggestion',
-                'Team has been in session for 2:45:12. Consider a 5-10 minute break to maintain engagement and focus.',
-                [
-                    { text: 'Suggest Now', action: () => { showToast('✅ Break suggestion sent to team'); closeModal(); } },
-                    { text: 'Schedule for Later', action: () => { showToast('📅 Break scheduled for 5 minutes'); closeModal(); } },
-                    { text: 'Cancel', action: closeModal }
-                ]
-            );
-            document.body.appendChild(modal);
-        }
-
-        function exportReport() {
-            // Trigger report download
-            showToast('📄 Generating report...');
-            setTimeout(() => {
-                window.location.href = '/api/export';
-                showToast('✅ Report downloaded successfully');
-            }, 1000);
-        }
-
-        function openPreferences() {
-            // Show preferences modal
-            const modal = createModal(
-                '⚙️ Dashboard Preferences',
-                'Configure your dashboard settings:',
-                [
-                    { text: 'Auto-refresh: ON', action: () => showToast('🔄 Auto-refresh toggled') },
-                    { text: 'Notifications: ON', action: () => showToast('🔔 Notifications toggled') },
-                    { text: 'Dark Mode: OFF', action: () => showToast('🌙 Theme toggled') },
-                    { text: 'Close', action: closeModal }
-                ]
-            );
-            document.body.appendChild(modal);
-        }
-
-        // Intervention functions
-        function executeIntervention() {
-            showToast('✅ Intervention message sent to Sarah');
-            const button = event.target;
-            button.style.background = '#059669';
-            button.textContent = 'Sent ✓';
-            setTimeout(() => {
-                button.style.background = '#3b82f6';
-                button.textContent = 'Execute';
-            }, 2000);
-        }
-
-        function showAlternative() {
-            const alternatives = [
-                '"Tom, we\'d love to hear your perspective on this."',
-                '"Let\'s take a moment for everyone to share their thoughts."',
-                '"Sarah, great points. How do others feel about this approach?"'
-            ];
-            const randomAlt = alternatives[Math.floor(Math.random() * alternatives.length)];
-            
-            const modal = createModal(
-                '💬 Alternative Suggestions',
-                `<p>Try this approach instead:</p><p style="font-style: italic; color: #3b82f6;">"${randomAlt}"</p>`,
-                [
-                    { text: 'Use This', action: () => { showToast('✅ Alternative suggestion sent'); closeModal(); } },
-                    { text: 'Show Another', action: () => { closeModal(); setTimeout(showAlternative, 100); } },
-                    { text: 'Cancel', action: closeModal }
-                ]
-            );
-            document.body.appendChild(modal);
-        }
-
-        // Utility functions
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed; top: 20px; right: 20px; z-index: 1000;
-                background: #3b82f6; color: white; padding: 12px 20px;
-                border-radius: 4px; font-size: 14px; font-weight: 500;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                transform: translateX(100%); transition: transform 0.3s ease;
-            `;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 100);
-            setTimeout(() => { 
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => document.body.removeChild(toast), 300);
-            }, 3000);
-        }
-
-        function createModal(title, content, buttons) {
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.5); z-index: 2000;
-                display: flex; align-items: center; justify-content: center;
-            `;
-            
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                background: #ffffff; border-radius: 8px; padding: 24px;
-                max-width: 500px; width: 90%; border: 1px solid #e5e7eb;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            `;
-            
-            modal.innerHTML = `
-                <h3 style="margin: 0 0 16px 0; color: #374151; font-size: 18px;">${title}</h3>
-                <div style="margin-bottom: 20px; color: #6b7280; line-height: 1.5;">${content}</div>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    ${buttons.map(btn => `
-                        <button onclick="(${btn.action.toString()})()" style="
-                            background: #3b82f6; color: white; border: none; padding: 8px 16px;
-                            border-radius: 4px; cursor: pointer; font-size: 14px;
-                        ">${btn.text}</button>
-                    `).join('')}
-                </div>
-            `;
-            
-            overlay.appendChild(modal);
-            overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
-            return overlay;
-        }
-
-        function closeModal() {
-            const modals = document.querySelectorAll('div[style*="position: fixed"][style*="z-index: 2000"]');
-            modals.forEach(modal => document.body.removeChild(modal));
-        }
-
-        // Add keyboard navigation improvements
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-
-        // Fix accessibility for disabled elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Remove any actually disabled buttons from tab order (if needed)
-            const disabledButtons = document.querySelectorAll('button[disabled]');
-            disabledButtons.forEach(btn => {
-                btn.setAttribute('tabindex', '-1');
-                btn.setAttribute('aria-disabled', 'true');
-            });
-            
-            // Based on QA feedback: Export Report appears disabled but is functional
-            // Make it properly accessible by ensuring it can be focused and used
-            const exportBtn = document.querySelector('[onclick="exportReport()"]');
-            if (exportBtn) {
-                exportBtn.setAttribute('aria-label', 'Export meeting analytics report as JSON file');
-                exportBtn.style.cursor = 'pointer';
-            }
-        });
     </script>
 </body>
 </html>

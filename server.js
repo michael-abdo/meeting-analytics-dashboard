@@ -7,6 +7,9 @@ const PORT = process.env.PORT || 3000;
 // Serve static files from the current directory
 app.use(express.static(__dirname));
 
+// Serve assets directory
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
 // Route to serve the dashboard
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));

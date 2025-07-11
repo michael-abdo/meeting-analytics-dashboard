@@ -1,0 +1,223 @@
+/* Layout and Grid Systems */
+
+/* Main Container */
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 80px 1fr 100px;
+  position: relative;
+  z-index: 2;
+  background: var(--color-bg-primary);
+}
+
+/* Header Layout */
+.header {
+  background: var(--color-bg-primary);
+  border-bottom: 2px solid var(--color-border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-xl);
+  gap: var(--spacing-lg);
+  box-shadow: var(--shadow-xs);
+  z-index: var(--z-dropdown);
+}
+
+/* Main Area Grid */
+.main-area {
+  display: grid;
+  grid-template-columns: minmax(280px, 320px) 1fr minmax(280px, 320px);
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background: var(--color-bg-primary);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Side Panels */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  min-height: 0;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--spacing-xs);
+}
+
+/* Center Display */
+.center-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  overflow-y: auto;
+  padding: 0 var(--spacing-xs);
+}
+
+/* Action Bar */
+.action-bar {
+  background: var(--color-bg-secondary);
+  border-top: 2px solid var(--color-border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: 0 var(--spacing-xl);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Floating HUD */
+.floating-hud {
+  position: fixed;
+  top: 100px;
+  right: var(--spacing-xl);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  width: 260px;
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-overlay);
+  transition: transform var(--transition-base);
+}
+
+.floating-hud:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Grid Systems */
+.power-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-md);
+  overflow: hidden;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1400px) {
+  .main-area {
+    grid-template-columns: minmax(260px, 300px) 1fr minmax(260px, 300px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .main-area {
+    grid-template-columns: 250px 1fr 250px;
+  }
+  
+  .floating-hud {
+    width: 220px;
+    right: var(--spacing-lg);
+  }
+  
+  .power-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-rows: auto 1fr auto;
+  }
+  
+  .main-area {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: var(--spacing-xl);
+  }
+  
+  .side-panel {
+    max-height: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+  }
+  
+  .power-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .floating-hud {
+    position: static;
+    width: 100%;
+    margin-top: var(--spacing-lg);
+    transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+    padding: var(--spacing-lg);
+  }
+  
+  .score-display {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .power-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .action-bar {
+    flex-wrap: wrap;
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-area {
+    padding: var(--spacing-md);
+  }
+  
+  .power-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .side-panel {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-bar {
+    gap: var(--spacing-sm);
+  }
+  
+  .floating-hud {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .floating-hud,
+  .action-bar {
+    display: none;
+  }
+  
+  .container {
+    height: auto;
+    display: block;
+  }
+  
+  .main-area {
+    display: block;
+    overflow: visible;
+  }
+  
+  .side-panel {
+    max-height: none;
+    overflow: visible;
+  }
+}
