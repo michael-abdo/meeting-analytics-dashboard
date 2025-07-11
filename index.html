@@ -51,7 +51,7 @@
         
         .header {
             background: #ffffff;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 3px solid #d1d5db;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -329,19 +329,19 @@
         }
         
         .sarah-bar {
-            background: #dc2626;
+            background: #dc2626 !important;
         }
         
         .tom-bar {
-            background: #d97706;
+            background: #d97706 !important;
         }
         
         .maya-bar {
-            background: #059669;
+            background: #059669 !important;
         }
         
         .james-bar {
-            background: #0284c7;
+            background: #0284c7 !important;
         }
         
         .sentiment-timeline {
@@ -607,6 +607,11 @@
             background: transparent;
             color: #6b7280;
             border: 1px solid #e5e7eb;
+        }
+        
+        .action-btn.secondary.export-disabled {
+            opacity: 0.6;
+            pointer-events: none;
         }
         
         .floating-hud {
@@ -1162,8 +1167,13 @@
                 btn.setAttribute('aria-disabled', 'true');
             });
             
-            // Note: Export Report button is functional but appears disabled - no changes needed
-            // as per QA feedback - it should remain accessible and functional
+            // Based on QA feedback: Export Report appears disabled but is functional
+            // Make it properly accessible by ensuring it can be focused and used
+            const exportBtn = document.querySelector('[onclick="exportReport()"]');
+            if (exportBtn) {
+                exportBtn.setAttribute('aria-label', 'Export meeting analytics report as JSON file');
+                exportBtn.style.cursor = 'pointer';
+            }
         });
     </script>
 </body>
